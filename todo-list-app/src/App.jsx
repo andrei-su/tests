@@ -1,37 +1,56 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import ImageLink from './components/ImageLink'
+import Todo from './components/Todo'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [todos, setTodos] = useState([])
+  const [todoInput, setTodoInput] = useState('')
+
+  const handleClick = (e, fromPrompt) => {
+    console.log(fromPrompt)
+    const newTodo = {
+      key: Math.random().toString(36).substr(2, 9),
+      value: fromPrompt ? prompt('Enter a new todo') : todoInput,
+    }
+
+    if (newTodo.value) {
+      setTodos([...todos, newTodo])
+      setTodoInput('')
+    }
+  }
 
   return (
-    <>
-      <div>
-        <ImageLink href="https://vite.dev" src={viteLogo} alt="Vite logo" />
-        <ImageLink
-          href="https://react.dev"
-          src={reactLogo}
-          alt="React logo"
-          className={'react'}
-        />
-      </div>
-      <h1>Vite + Reacts</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div
+      style={{
+        height: '100vh',
+        width: '100vw',
+        justifyItems: 'center',
+      }}
+    >
+      <h1>Todo List App</h1>
+      <div style={{ justifyItems: 'center', display: 'grid', gap: '1rem' }}>
+        <button style={{}} onClick={(e) => handleClick(e, true)}>
+          Add from prompt
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '2rem',
+          }}
+        >
+          <input
+            value={todoInput}
+            onChange={(e) => setTodoInput(e.target.value)}
+          />
+          <button onClick={handleClick}>Add</button>
+        </div>
+        <div style={{ width: '100%' }}>
+          {todos.map((todo) => (
+            <Todo key={todo.key} value={todo.value} />
+          ))}
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
-
-export default App
